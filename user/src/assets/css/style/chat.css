@@ -1,0 +1,197 @@
+/* ==========================Page Chat====================== */
+.card-wrapper {
+  border-right: 2px solid #eceded;
+  background-color: white !important;
+}
+.chat .tab-content .patient-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover !important;
+  margin-right: 15px !important;
+}
+.chat .tab-content .last-action-seen {
+  font-size: 13px !important;
+  color: #6b7779;
+}
+.chat .tab-content .last-action-nrp {
+  font-size: 13px !important;
+  color: #4d5d62;
+}
+.chat .tab-content .icon-seen {
+  font-size: 18px !important;
+  color: #6b7779;
+  margin-top: 8px;
+}
+.chat .tab-content .patient-name {
+  color: var(--color-950) !important;
+}
+.chat .tab-content.patient-chat .patientAcc.active {
+  background-color: #f6f7f8 !important;
+}
+.chat .tab-content.patient-chat .patientAcc {
+  width: 100%;
+  transition: 0.25s;
+  padding: 14px 25px;
+  background-color: white !important;
+  border: none !important;
+  border-bottom: 1px solid #eceded !important;
+}
+.chat .tab-content.patient-chat .patientAcc:hover {
+  background-color: #f6f7f8 !important;
+}
+.chat .patient-chat .n-reply {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #af0505;
+  color: white;
+  font-size: 13px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+}
+.chat .patient-chat .time-rp {
+  color: #7e8d8f;
+  font-size: 12px !important;
+}
+.chat .card-wrapper .patient-option .nav-item button.active {
+  border-bottom: 3px solid var(--color-500);
+  color: var(--color-700);
+  padding-inline: 25px;
+}
+.chat .card-wrapper .patient-option {
+  border-bottom: 1px solid #eceded !important;
+}
+.chat .card-wrapper .patient-option .nav-item button {
+  font-weight: 450;
+  color: #79888d;
+  transition: 0.25s;
+}
+.chat .card-wrapper .patient-option .nav-item button:hover {
+  color: var(--color-700);
+}
+.chat .patient-detail {
+  /* position: fixed; */
+  /* top: 72.4px!important; */
+  border-bottom: 2px solid #eceded;
+}
+.chat .patient-detail .p-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  background-size: 50%;
+}
+.chat .patient-detail .patient-name {
+  font-size: 17px !important;
+}
+.chat .patient-detail .status-online {
+  font-size: 12px !important;
+  color: var(--color-600);
+}
+.chat .chat-area .p-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+.chat .chat-area .chat-msg {
+  /* width: 45%; */
+  padding: 15px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #eceded;
+}
+.chat .chat-area .chat-msg .time-rp {
+  font-size: 13px !important;
+  font-weight: 450;
+}
+.chat .chat-area .chat-msg .text-msg {
+  font-size: 15px;
+}
+.chat .chat-area .patient-side {
+  display: flex;
+  align-items: end;
+  width: 100%;
+}
+.chat .chat-area .doctor-side {
+  width: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+}
+.chat .chat-area .doctor-side,
+.chat .chat-area .patient-side {
+  margin-bottom: 10px;
+}
+.chat .chat-area .doctor-side .chat-msg {
+  background-color: #0b92b6;
+  color: white !important;
+  margin-bottom: 15px;
+}
+.chat .chat-area {
+  background-color: rgba(172, 172, 172, 0.205);
+  overflow: auto;
+  padding-inline: 10px;
+  padding-bottom: 80px;
+  height: calc(85vh - 72.4px);
+}
+.chat .text-area {
+  position: absolute;
+}
+.chat .text-area form {
+  padding: 15px 25px;
+}
+.chat .text-area form textarea {
+  width: 100%;
+  resize: none;
+  padding: 14px 45px;
+  border-radius: 8px;
+  border: 2px solid #eceded;
+}
+.chat .text-area form textarea:focus {
+  border: 2px solid #eceded !important;
+  box-shadow: none;
+  outline: none;
+}
+.chat .text-area form .file-icon-input {
+  position: absolute;
+  font-size: 25px;
+  cursor: pointer;
+  margin-left: 15px;
+  color: #6d787b;
+  transition: 0.25s;
+}
+.chat .text-area form .file-icon-input:hover {
+  color: #0988ae;
+}
+.chat .text-area form .submit-text {
+  right: 40px;
+  background-color: #0b92b6;
+  width: 35px;
+  height: 35px;
+  color: white;
+}
+.chat-sender,
+.chat-receiver {
+  margin-bottom: 15px;
+  max-width: 480px;
+  padding: 15px;
+  border-radius: 14px;
+  border: 1px solid #eceded;
+}
+.chat-sender {
+  margin-left: auto;
+  color: #343e41;
+  background-color: #0b92b6;
+  color: #ffffff;
+}
+
+.chat-receiver {
+  margin-right: auto;
+  background-color: #ffffff;
+}

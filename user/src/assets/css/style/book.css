@@ -1,0 +1,252 @@
+.container-booking {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.container-booking .card .card-icon {
+  max-width: 120px;
+  max-height: 120px;
+}
+
+.container-booking .card .card-icon img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+.container-booking .card {
+  transition: 0.3s;
+  border: 2px solid #f0f0f0;
+  border-radius: 12px;
+}
+.container-booking input[type="radio"]:checked + .card {
+  border: 2px solid #3db9d1 !important;
+  box-shadow: 1px 2px 8px 2px #017a9f2d;
+}
+.container-booking input[type="radio"]:checked + .card .sec-title {
+  color: #027394;
+  font-weight: 500;
+}
+
+/* .container-booking .doctor-image img {
+  max-width: 200px;
+  max-height: 200px;
+} */
+
+.border-wrapper {
+  outline: 1px solid var(--color-800);
+}
+
+.container-booking .custom-radio {
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-booking .custom-radio input[type="radio"] {
+  display: block;
+  accent-color: var(--color-700);
+  width: 20px;
+  height: 20px;
+}
+
+.container-booking .custom-card .card-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.card.dashed {
+  background-image: repeating-linear-gradient(
+      90deg,
+      #c7c7c7,
+      #c7c7c7 12px,
+      transparent 12px,
+      transparent 16px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      #c7c7c7,
+      #c7c7c7 12px,
+      transparent 12px,
+      transparent 16px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #c7c7c7,
+      #c7c7c7 12px,
+      transparent 12px,
+      transparent 16px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      #c7c7c7,
+      #c7c7c7 12px,
+      transparent 12px,
+      transparent 16px
+    );
+  background-position: left top, right top, left bottom, left top;
+  background-repeat: repeat-x, repeat-y, repeat-x, repeat-y;
+  background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+}
+
+.choose-option #pills-tab {
+  background-color: #f5f5f5;
+  padding: 6px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.choose-option .nav-item {
+  flex: 1;
+}
+
+.choose-option .nav-pills .nav-link {
+  border-radius: 15px;
+  padding: 10px 20px;
+  font-weight: bold;
+  color: #6c757d;
+  transition: all 0.3s ease;
+
+  width: 100%;
+}
+
+.choose-option .nav-pills .nav-link.active {
+  background-color: white;
+  color: #007b8f;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.choose-option .nav-pills .nav-link:hover {
+  color: #007b8f;
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
+.card-msg {
+  border: 2px solid var(--color-600) !important;
+  background-color: #f0ffff !important;
+}
+
+.payment .nav-pills .nav-link {
+  font-size: 14px;
+  color: #555555;
+  padding: 10px 15px;
+  border-radius: 0;
+  background-color: transparent;
+  border: none;
+}
+
+.payment .nav-pills .nav-link.active {
+  color: #004b6b;
+  border-bottom: 3px solid #004b6b;
+  background-color: transparent;
+}
+
+.payment .tab-content {
+  padding: 15px;
+  background: #f8f9fa;
+}
+
+.end-booking .icon-img img {
+  width: 120px;
+  height: 120px;
+}
+
+/* ==================customize-form-wizard============== */
+.wizard-progress-with-circle {
+  position: absolute;
+  top: 25px !important;
+  height: 2px !important;
+  width: 100% !important;
+  margin: auto !important;
+}
+
+.wizard-icon-circle.md {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.btn-custom {
+  background-color: var(--color-700) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+}
+
+.prev-btn {
+  background-color: #dadada !important;
+  color: #838383 !important;
+}
+.prev-btn {
+  all: unset;
+  border-radius: 16px;
+  border: 1px solid #e9e9e9 !important;
+  color: #838383;
+  background-color: #fcfcfc !important;
+  padding: 4px 10px;
+}
+
+.table-responsive {
+  display: block !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.table {
+  min-width: 600px;
+}
+
+/* ===============flat-pockr ================= */
+.flatpickr-calendar {
+  /* width: 100% !important; */
+  padding: 20px !important;
+  --webkit-box-shadow: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.time-slots button {
+  padding: 10px 20px;
+  width: 100%;
+  border: 2px solid var(--color-700);
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 15px !important;
+}
+
+.time-slots button.selected {
+  background-color: var(--color-700);
+  border-radius: 15px;
+  color: white;
+}
+
+/* =================responsive================ */
+.package-detail-list.table-responsive {
+  overflow-x: auto !important;
+  width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .choose-option .card-icon img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .choose-option .card-title h5,
+  .doctor-info h3,
+  p,
+  .patient-info h5 {
+    font-size: 16px;
+  }
+  .tab-content .doctor-info span,
+  .patient-info p {
+    font-size: 14px;
+  }
+
+  .packages .booking-wrapper {
+    display: flex;
+    justify-content: space-between !important;
+  }
+}

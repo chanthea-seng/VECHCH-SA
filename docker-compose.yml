@@ -1,0 +1,114 @@
+version: "3.8"
+
+services:
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306" # Changed from default 3306 to avoid conflicts
+    networks:
+      - app-network
+
+  # phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - "8081:80" # phpMyAdmin accessible at 8081
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+
+  # PHP-FPM Service
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./api:/var/www
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: laravel
+      DB_USERNAME: laravel
+      DB_PASSWORD: secret
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+
+  # Nginx Service for API
+  api-nginx:
+    image: nginx:alpine
+    container_name: api-nginx
+    restart: unless-stopped
+    ports:
+      - "9080:80" # API accessible at 9001
+    volumes:
+      - ./api:/var/www
+      - ./nginx/api.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app-network
+    depends_on:
+      - api
+
+  # User Frontend
+  user:
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    container_name: user
+    restart: unless-stopped
+    ports:
+      - "9101:80" # User frontend at 9101
+    networks:
+      - app-network
+
+  # Admin Frontend
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: admin
+    restart: unless-stopped
+    ports:
+      - "9102:80" # Admin frontend at 9102
+    networks:
+      - app-network
+
+  # Doctor Frontend
+  doctor:
+    build:
+      context: ./doctor
+      dockerfile: Dockerfile
+    container_name: doctor
+    restart: unless-stopped
+    ports:
+      - "9103:80" # Doctor frontend at 9103
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

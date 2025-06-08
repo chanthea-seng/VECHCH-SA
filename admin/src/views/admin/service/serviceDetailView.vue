@@ -1,0 +1,600 @@
+<template>
+  <div class="main">
+    <loadingView v-if="pageLoading" />
+
+    <div class="container-fluid bg-grey">
+      <div class="row justify-content-between position-relative">
+        <div class="sidebar-container position-relative p-0">
+          <sideBar class="position-sticky top-0" />
+        </div>
+        <div class="sidecontent-container pt-3">
+          <div class="row">
+            <Navhead />
+            <hr />
+            <div class="content-container bg-white p-4 rounded-4">
+              <div class="section-title mb-4">
+                <h5 class="text-color-900">Create Service</h5>
+              </div>
+              <div class="account-information mb-3">
+                <h4 class="text-color-700 fw-semibold">Main Service</h4>
+              </div>
+              <div class="row row-gap-3 mb-4">
+                <!-- Input Image -->
+                <div class="col-12">
+                  <div class="d-flex justify-content-between mb-2">
+                    <spansc class="text-grey fw-semibold">Service Image</spansc>
+                    <a
+                      role="button"
+                      @click="useCreateService.clearImage()"
+                      class="text-color-800 fw-medium"
+                    >
+                      <i class="bi bi-arrow-clockwise"></i> Click to change
+                      image
+                    </a>
+                  </div>
+
+                  <!-- Drag & Drop Area -->
+                  <div class="border rounded-4 p-3 text-center">
+                    <input
+                      type="file"
+                      class="d-none"
+                      id="choose-image"
+                      @change="useCreateService.handleFileUpload"
+                      accept="image/*"
+                      multiple
+                    />
+                    <label
+                      for="choose-image"
+                      class="label-choose-image p-3 column-gap-2"
+                      id="drop-area"
+                      @dragover.prevent="useCreateService.highlightDropArea"
+                      @dragleave.prevent="useCreateService.removeHighlight"
+                      @drop.prevent="useCreateService.handleDrop"
+                    >
+                      <div class="col-6 position-relative">
+                        <img
+                          v-if="useCreateService.previewImages.length"
+                          :src="useCreateService.previewImages[0]"
+                          class="main-preview position-relative z-2"
+                        />
+                        <p
+                          v-if="!useCreateService.previewImages.length"
+                          class="text-center position-absolute top-50 start-50 translate-middle z-1"
+                        >
+                          <i class="bi bi-file-earmark-arrow-up fs-4"></i>
+                          Drag & Drop or Click to Choose Image (Max: 1MB,
+                          JPEG/JPG/PNG)
+                        </p>
+                      </div>
+                      <div
+                        class="col-6 d-flex justify-content-between row-gap-2 flex-wrap"
+                      >
+                        <img
+                          v-for="(
+                            img, index
+                          ) in useCreateService.previewImages.slice(1)"
+                          :key="index"
+                          :src="img"
+                          class="small-preview"
+                        />
+                      </div>
+                    </label>
+                  </div>
+                  <p
+                    v-if="useCreateService.errorMessage"
+                    class="text-danger mt-2"
+                  >
+                    {{ useCreateService.errorMessage }}
+                  </p>
+                  <div
+                    v-if="$v.selectedFiles.$error"
+                    class="text-danger small mt-1"
+                  >
+                    <span v-if="$v.selectedFiles.required"
+                      >Images is required.</span
+                    >
+                  </div>
+                </div>
+                <!-- choose service -->
+                <div class="col-12">
+                  <div class="mb-2">
+                    <span class="text-muted fw-semibold">
+                      Choose service type
+                      <small class="text-danger">*</small>
+                    </span>
+                  </div>
+                  <div class="d-flex column-gap-3">
+                    <label
+                      class="card-radio"
+                      :class="{
+                        selectedRadio: useCreateService.selectedService == 1,
+                      }"
+                    >
+                      <input
+                        type="radio"
+                        name="service"
+                        value="1"
+                        v-model="useCreateService.selectedService"
+                        @blur="$v.selectedService.$touch()"
+                      />
+                      <div>
+                        <p class="fw-medium m-0">Package</p>
+                        <span>Service package for check-up</span>
+                      </div>
+                    </label>
+                    <label
+                      for="serviceVaccine"
+                      class="card-radio"
+                      :class="{
+                        selectedRadio: useCreateService.selectedService == 2,
+                      }"
+                    >
+                      <input
+                        type="radio"
+                        name="service"
+                        id="serviceVaccine"
+                        value="2"
+                        v-model="useCreateService.selectedService"
+                        @blur="$v.selectedService.$touch()"
+                      />
+                      <div>
+                        <p class="fw-medium m-0">Vaccine</p>
+                        <span>Service package for vaccine</span>
+                      </div>
+                    </label>
+                  </div>
+                  <div
+                    v-if="$v.selectedService.$error"
+                    class="text-danger small mt-1"
+                  >
+                    <span v-if="$v.selectedService.required"
+                      >Service type is required.</span
+                    >
+                    <span v-else-if="$v.selectedService.between"
+                      >Must be Package (1) or Vaccine (2).</span
+                    >
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="row row-gap-3">
+                    <!-- Title in English -->
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label
+                          for="titleEn"
+                          class="form-label fw-medium text-muted"
+                        >
+                          Title in English
+                          <small class="text-danger">*</small>
+                        </label>
+                        <input
+                          id="titleEn"
+                          type="text"
+                          v-model="useCreateService.titleEn"
+                          placeholder="English Title"
+                          class="form-control"
+                          :class="{ 'is-invalid': $v.titleEn.$error }"
+                          @blur="$v.titleEn.$touch()"
+                        />
+                        <div v-if="$v.titleEn.$error" class="invalid-feedback">
+                          <span v-if="$v.titleEn.required"
+                            >Title in English is required.</span
+                          >
+                          <span v-else-if="$v.titleEn.minLength"
+                            >Must be at least 5 characters.</span
+                          >
+                          <span v-else-if="$v.titleEn.maxLength"
+                            >Cannot exceed 250 characters.</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Title in Khmer -->
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label
+                          for="titleKm"
+                          class="form-label fw-medium text-muted"
+                        >
+                          Title in Khmer
+                          <small class="text-danger">*</small>
+                        </label>
+                        <input
+                          id="titleKm"
+                          type="text"
+                          v-model="useCreateService.titleKm"
+                          placeholder="Khmer Title"
+                          class="form-control"
+                          :class="{ 'is-invalid': $v.titleKm.$error }"
+                          @blur="$v.titleKm.$touch()"
+                        />
+                        <div v-if="$v.titleKm.$error" class="invalid-feedback">
+                          <span v-if="$v.titleKm.required"
+                            >Title in Khmer is required.</span
+                          >
+                          <span v-else-if="$v.titleKm.minLength"
+                            >Must be at least 5 characters.</span
+                          >
+                          <span v-else-if="$v.titleKm.maxLength"
+                            >Cannot exceed 250 characters.</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Description in English -->
+                    <div class="col-6">
+                      <div class="form-custom">
+                        <label
+                          for="descriptionEn"
+                          class="fw-medium text-grey mb-2"
+                        >
+                          Description in English
+                          <small class="text-danger">*</small>
+                        </label>
+                        <textarea
+                          id="descriptionEn"
+                          v-model="useCreateService.descriptionEn"
+                          placeholder="Detail description"
+                          :class="{ 'is-invalid': $v.descriptionEn.$error }"
+                          @blur="$v.descriptionEn.$touch()"
+                        ></textarea>
+                        <div
+                          v-if="$v.descriptionEn.$error"
+                          class="invalid-feedback"
+                        >
+                          <span v-if="$v.descriptionEn.required"
+                            >Description in English is required.</span
+                          >
+                          <span v-else-if="$v.descriptionEn.minLength"
+                            >Must be at least 5 characters.</span
+                          >
+                          <span v-else-if="$v.descriptionEn.maxLength"
+                            >Cannot exceed 65,530 characters.</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Description in Khmer -->
+                    <div class="col-6">
+                      <div class="form-custom">
+                        <label
+                          for="descriptionKm"
+                          class="fw-medium text-grey mb-2"
+                        >
+                          Description in Khmer
+                          <small class="text-danger">*</small>
+                        </label>
+                        <textarea
+                          id="descriptionKm"
+                          v-model="useCreateService.descriptionKm"
+                          placeholder="Detail description"
+                          :class="{ 'is-invalid': $v.descriptionKm.$error }"
+                          @blur="$v.descriptionKm.$touch()"
+                        ></textarea>
+                        <div
+                          v-if="$v.descriptionKm.$error"
+                          class="invalid-feedback"
+                        >
+                          <span v-if="$v.descriptionKm.required"
+                            >Description in Khmer is required.</span
+                          >
+                          <span v-else-if="$v.descriptionKm.minLength"
+                            >Must be at least 5 characters.</span
+                          >
+                          <span v-else-if="$v.descriptionKm.maxLength"
+                            >Cannot exceed 65,530 characters.</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="quill-container mb-3">
+                    <label
+                      for="instruction"
+                      class="form-label fw-medium text-muted"
+                    >
+                      Instruction
+                      <small class="text-danger">*</small>
+                    </label>
+                    <div id="quill-editor" ref="quillEditor"></div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="d-flex justify-content-end mt-2 mb-4"
+                v-if="useCreateService.serviceId"
+              >
+                <primaryBtn
+                  label="Update"
+                  class="px-3"
+                  :click-event="submitFormMain"
+                />
+              </div>
+              <div class="account-information mb-3">
+                <h4 class="text-color-700 fw-semibold">Sub Service</h4>
+              </div>
+
+              <div class="d-flex align-items-center column-gap-2 mb-3">
+                <div>
+                  <span class="fw-medium text-grey">Add Sub service</span>
+                </div>
+                <a
+                  role="button"
+                  class="btn-add-service"
+                  @click="onClickCreateMdl()"
+                >
+                  <span> <i class="bi bi-plus"></i> </span
+                ></a>
+              </div>
+
+              <div class="row row-gap-3 g-0" v-if="useCreateService.subService">
+                <div
+                  class="sub-service-card"
+                  v-for="(sub, index) in useCreateService.subService"
+                  :key="index"
+                >
+                  <div class="col-1">
+                    <span class="fw-medium text-color-900"
+                      >Type: {{ index + 1 }}</span
+                    >
+                  </div>
+                  <div class="col-4">
+                    <span class="text-grey limit-line-1">{{
+                      sub.description
+                    }}</span>
+                  </div>
+
+                  <div class="col-4">
+                    <span class="text-grey limit-line-1">{{
+                      sub.local_description
+                    }}</span>
+                  </div>
+                  <div class="col-1">
+                    <span>$ {{ sub.price }}</span>
+                  </div>
+                  <div class="col-2">
+                    <div class="d-flex justify-content-between">
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          role="switch"
+                          id="flexSwitchCheckChecked"
+                          :checked="sub.is_active == 1"
+                          @change="useCreateService.toggleStatus(sub.id)"
+                        />
+                      </div>
+
+                      <div class="group-btn">
+                        <a
+                          role="button"
+                          class="btn-edit"
+                          @click="EditSub(sub.id)"
+                        >
+                          <span><i class="bi bi-pen"></i></span>
+                        </a>
+
+                        <a
+                          role="button"
+                          class="btn-edit"
+                          @click="openModal(sub.id)"
+                        >
+                          <span><i class="bi bi-trash3"></i></span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                  <primaryBtn
+                    v-if="useCreateService.serviceId"
+                    label="Update"
+                    class="px-3"
+                    :click-event="useCreateService.updateSub"
+                  />
+                  <primaryBtn
+                    v-if="!useCreateService.serviceId"
+                    label="Create"
+                    class="px-5"
+                    :click-event="onClickFullValidate"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <dynamicForm />
+  <mdlConfirm
+    ref="modalRef"
+    message="Delete service. Are you sure to delete?"
+    @confirm="confirmDelete"
+  />
+</template>
+
+<script setup>
+import sideBar from "@/components/layouts/sideBar.vue";
+import Navhead from "@/components/layouts/header.vue";
+import primaryBtn from "@/components/layouts/primaryBtn.vue";
+import dynamicForm from "@/components/layouts/dynamicForm/dynamicForm.vue";
+import mdlConfirm from "@/components/layouts/mdlConfirm.vue";
+import loadingView from "@/components/loadingView.vue";
+import { useNotyfStore } from "@/stores/notyfStore";
+import { CreateService } from "@/stores/createService";
+import { onMounted, ref, onUnmounted, nextTick, watch, shallowRef } from "vue";
+import {
+  required,
+  minLength,
+  maxLength,
+  integer,
+  helpers,
+} from "@vuelidate/validators";
+import { useVuelidate } from "@vuelidate/core";
+import Quill from "quill";
+import "quill/dist/quill.snow.css";
+import { debounce } from "lodash";
+const notfy = useNotyfStore();
+const useCreateService = CreateService();
+
+const modalRef = ref(null);
+const openModal = (id) => {
+  useCreateService.selectedId = id;
+  modalRef.value.openModal();
+};
+const confirmDelete = () => {
+  if (useCreateService.selectedId != 0) {
+    RemoveSub(useCreateService.selectedId);
+  }
+};
+const onClickCreateMdl = () => {
+  useCreateService.clearInput();
+  useCreateService.mdlCreateService.show();
+};
+const EditSub = (id) => {
+  useCreateService.selectedId = id;
+  useCreateService.checkIfUpdate();
+  useCreateService.mdlCreateService.show();
+};
+
+const RemoveSub = (id) => {
+  useCreateService.selectedId = id;
+  useCreateService.RemoveSub();
+};
+
+// Quill editor ref and instance
+const quillEditor = ref(null);
+const quill = shallowRef(null);
+const pageLoading = ref(true);
+onMounted(async () => {
+  try {
+    // Fetch service details
+    await useCreateService.getServiceDetail();
+
+    // Initialize Quill editor
+    quill.value = new Quill(quillEditor.value, {
+      theme: "snow",
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ["bold", "italic", "underline"],
+          [{ list: "bullet" }],
+        ],
+      },
+      placeholder: "Write something amazing...",
+    });
+
+    // Set fetched content to Quill editor
+    if (useCreateService.instruction) {
+      quill.value.root.innerHTML = useCreateService.instruction;
+    }
+
+    // Update content on text change
+    quill.value.on("text-change", () => {
+      useCreateService.instruction = quill.value.root.innerHTML;
+    });
+  } catch (error) {
+    console.error("Error fetching service details:", error);
+  } finally {
+    pageLoading.value = false;
+  }
+});
+// Sync external content changes to Quill
+watch(useCreateService.instruction, (newValue) => {
+  if (quill && newValue !== quill.root.innerHTML) {
+    quill.root.innerHTML = newValue;
+  }
+});
+
+// Cleanup on unmount
+onUnmounted(() => {
+  if (quill) {
+    quill.value = null;
+  }
+});
+
+const between = (value) => !helpers.req(value) || (value >= 1 && value <= 2);
+const rulesMain = {
+  selectedService: {
+    required,
+    integer,
+    between: helpers.withMessage(
+      "Must be 1 (Package) or 2 (Vaccine).",
+      between
+    ),
+  },
+  selectedFiles: { required },
+  titleEn: {
+    required,
+    minLength: minLength(5),
+    maxLength: maxLength(250),
+  },
+  titleKm: {
+    required,
+    minLength: minLength(5),
+    maxLength: maxLength(250),
+  },
+  descriptionEn: {
+    required,
+    minLength: minLength(5),
+    maxLength: maxLength(65530),
+  },
+  descriptionKm: {
+    required,
+    minLength: minLength(5),
+    maxLength: maxLength(65530),
+  },
+};
+
+const $v = useVuelidate(rulesMain, useCreateService);
+const submitFormMain = async () => {
+  $v.value.selectedService.$touch();
+  $v.value.titleEn.$touch();
+  $v.value.titleKm.$touch();
+  $v.value.descriptionEn.$touch();
+  $v.value.descriptionKm.$touch();
+  const relevantErrors = $v.value.$errors.filter((err) =>
+    [
+      "selectedService",
+      "titleEn",
+      "titleKm",
+      "descriptionEn",
+      "descriptionKm",
+    ].includes(err.$property)
+  );
+  if (relevantErrors.length > 0) {
+    notfy.warning("Missing input");
+    return;
+  }
+  await useCreateService.updateMain();
+  $v.value.$reset();
+};
+
+const onClickFullValidate = async () => {
+  $v.value.selectedFiles.$touch();
+  $v.value.selectedService.$touch();
+  $v.value.titleEn.$touch();
+  $v.value.titleKm.$touch();
+  $v.value.descriptionEn.$touch();
+  $v.value.descriptionKm.$touch();
+  const relevantErrors = $v.value.$errors.filter((err) =>
+    [
+      "selectedFiles",
+      "selectedService",
+      "titleEn",
+      "titleKm",
+      "descriptionEn",
+      "descriptionKm",
+    ].includes(err.$property)
+  );
+  if (relevantErrors.length > 0) {
+    notfy.warning("Missing input");
+    return;
+  }
+  await useCreateService.onClickCreateService();
+  $v.value.$reset();
+};
+</script>
